@@ -86,7 +86,6 @@ def user(username):
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
-        print('request came - before_request')
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
@@ -94,7 +93,7 @@ def before_request():
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm()
+    form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
